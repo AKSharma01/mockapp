@@ -1,0 +1,127 @@
+<html>
+<head>
+    <title>Auth Page</title>
+    <meta name="robots" content="noindex, nofollow" />
+       
+	<link rel="stylesheet" href="css/showhide.css"/>
+   
+        
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="js/showhide.js"></script>
+	<script type="text/javascript">
+		function callApi(){
+		     	$.post({
+				url : "http://mockapi.se/login",
+				method : "POST",
+				contentType : "application/json",
+				dataType:"JSON",
+				data : JSON.stringify({'email': $('#loginemail').val(), 'password' : $('#loginpassword').val()}),
+				// xhrFields : {
+				// 	'Access-Control-Allow-Origin': '*',
+				// 	'Access-Control-Allow-Method' : 'POST',
+				// 	'Access-Control-Allow-Credentials' : true,
+				// 	withCredential : true
+				// },
+
+				headers : {
+					'Content-Type' : "application/json"
+				},
+
+	           success:function(response){
+	           		// alert(response.status)
+	           		console.log(response.data['userid']);
+	           		if (typeof(Storage) !== "undefined") {
+					    localStorage.setItem('userid', response.data['userid']);
+					    localStorage.setItem('username', response.data['username']);
+					    // console.log(localStorage.username);
+					    if (response.data['userid'])
+					    	window.location.href = 'home.html';
+					} else {
+					    alert('localStorage is not supportable.')
+					}
+	                $(".result").html(response);
+	                // 
+	            },
+	            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+	                alert("Status: " + errorThrown); //alert("Error: " + errorThrown); 
+	            } 
+	        });
+		}
+		   
+		function callApi1(){
+		     	$.post({
+				url : "http://mockapi.se/register",
+				method : "POST",
+				contentType : "application/json",
+				dataType:"JSON",
+				data : JSON.stringify({
+					'username' : $('.username').val(),
+					'fullname' : $('.fullname').val(),
+					'email': $('.email').val(),
+					'password' : $('.password').val()
+				}),
+				// xhrFields : {
+				// 	'Access-Control-Allow-Origin': '*',
+				// 	'Access-Control-Allow-Method' : 'POST',
+				// 	'Access-Control-Allow-Credentials' : true,
+				// 	withCredential : true
+				// },
+
+				headers : {
+					'Content-Type' : "application/json"
+				},
+
+	           success:function(response){
+	           		// alert(response.status)
+	           		console.log(response)
+	                $(".result").html(response);
+	                window.location.href = 'index.html'
+	            },
+	            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+	            	console.log(XMLHttpRequest, textStatus, errorThrown);
+	                alert("Status: " + errorThrown); //alert("Error: " + errorThrown); 
+	            } 
+	        });
+		}
+
+	</script>
+</head> 
+   
+<body> 
+ 
+ 
+     <img id="logo" src="img/logo.png "/>   
+	   <div id="main">
+	    <!-- Create div first for Login Form-->
+     <div id="first">
+	    <form action="" method="post">
+          <h3>Login to your Mock Form account.</h3>
+	      <img id="divider" src="img/divider.png "/>
+		  <input type="text" id="loginemail" name="email" placeholder="Email" />
+		  <input type="password" id="loginpassword" name="password" placeholder="Password" />
+		  <input type="button" name="login" value="Sign In" onclick="callApi()" />
+		  
+		  <p id="two">Don't have account? <a href="#" id="signup" class="signup">Sign up here</a></p>
+		</form>	
+	 </div>
+	 
+	 <!-- Create div second for Signup Form-->
+	 <div id="second">
+	    <form action="" method="post" id="form">
+	      <h3>Create a Mock Form Account</h3>
+	      <img id="divider" src="img/divider.png "/>
+		  <input type="text" id="name" class="username" placeholder="User Name" />
+		  <input type="text" id="name" class="fullname" placeholder="Full Name" />
+		  <input type="password" id="registerpassword" class="password" placeholder="Password" />
+	      <input type="text" id="registeremail" class="email" placeholder="Email" />
+		  <input type="button" name="register" value="Signup" onclick="callApi1()" />
+		  <p id="two">Already have an account? <a href="#" id="signin" class="signin">Sign in</a></p>
+		</form>  
+	 </div>
+	 
+  </div> 
+  
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+        <link href="http://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css" rel="stylesheet"></link>
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <script src="css/ace.js"></script>
+        <script src="css/theme-monokai.js"></script>
+        <script src="css/mode-json.js"></script>
+        <script src="js/angular.min.js"></script>
+
+        <script type="text/javascript">
+                       
+        </script>
+
+        <style type="text/css">
+            #myEditor{
+                position:relative;
+                width:100%;
+                height:400px;
+            }
+        </style>
+        <script src="js/vendor/jquery-1.11.2.min.js"></script>
+
+        
+        
+        
+            
+    </head>
+    <body >
+        <div>
+
+            <div class="header-container">
+                <header class="wrapper clearfix">
+                    <h1 class="title"><a href="home.html" class="signup" style="color: white;">Mockapi</a></h1>
+                    <nav>
+
+                        <ul>
+                            <li> <a href="#"disabled="disabled" id="signup" class="signup" style="pointer-events: none;   cursor: default;" ></a></li>
+                            <li><a href="#">New</a></li>
+                            <li> <a href="#" id="signinmm" onclick="logout()"  >Logout</a></li>
+
+                        </ul>
+
+
+                    </nav>
+                </header>
+            </div>
+
+        </div>
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                <article>
+                    <header>
+                    <p id="welcome"></p><br>
+                        <p> Title</p>
+                        <p><input type="text" name="title" id="title"></p>
+                        <p>Version:</p>
+                        <p><input type="text" name="Version" id="Version"></p>
+
+                        <div id="myEditor"></div><br>
+                    
+                    </header>
+                    <button  onclick="updateData()">Create</button>
+                    <section>
+
+
+                    </section>
+
+                </article>
+
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->  
+
+        <script type="text/javascript">
+
+
+            var editor = ace.edit("myEditor");
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/javascript");
+
+            editor.setValue("this is text");
+            
+            function updateData() {
+                var Version =  $('#Version').val();
+                var title = $('#title').val();
+                //var editor_val =  document.getElementById('myEditor').getValue();
+                var result = editor.getValue();
+                //sconsole.log(editor_val);
+                console.log(result);
+                $.ajax({
+                    url : 'http://mockapi.se/mockapi/new',
+                    method : 'POST',
+                    contentType : 'application/json',
+                    data : JSON.stringify({
+                        'jsondata':result, 
+                        'version' : Version, 
+                        'userid' : localStorage.userid, 
+                        'title' : title
+                    }),
+                    dataType : 'json',
+                    headers:{
+                        'Content-Type' : 'application/json'
+                    },
+                    success:function(response){
+                        console.log(response);
+                        alert('Form is created with id = '+response['data']);
+                        localStorage.setItem('formid',response['data']) ; 
+                        localStorage.setItem('slug',response['slug']);
+                        localStorage.setItem('version',response['version']);
+                        localStorage.setItem('title', response['title'])
+                        window.location.href = 'show.html';
+                    }
+                });
+            };
+
+            document.getElementById('signup').innerHTML = localStorage.username;
+
+            function logout(){
+                alert('Sccessfully Logout');
+                if (localStorage.userid){
+                    localStorage.removeItem('userid');
+                    localStorage.removeItem('username');
+                }
+                window.location.href = 'index.html';
+            };    
+        </script>      
+        
+    </body>
+</html>
